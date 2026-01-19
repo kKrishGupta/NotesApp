@@ -16,8 +16,19 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/files/:filename', (req, res) => {
+ fs.readFile(`./files/${req.params.filename}`, 'utf-8', (err, data) => {
+   console.log(data);
+  if (err) {
+     console.error('Error reading file:', err);
+     return res.status(500).send('Internal Server Error');
+   }
+   res.render('file', {filename: req.params.filename,  data: data });
+ });
+ });
+
 app.post('/create', (req, res) => {
-  console.log(req.body);
+  
   fs.writeFile(`./files/${req.body.title.split(' ').join('')}.txt`, req.body.details, (err) => {
     if (err) {
       console.error('Error writing file:', err);
